@@ -6,6 +6,6 @@ class WeatherPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ForecastView();
+    return WeatherView();
   }
 }

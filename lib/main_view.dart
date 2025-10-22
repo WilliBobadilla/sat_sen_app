@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sat_sen_app/features/boletin/presentation/pages/boletin_page.dart';
+import 'package:sat_sen_app/features/forecast/presentation/pages/forecast_page.dart';
+import 'package:sat_sen_app/features/settings/presentation/pages/settings_page.dart';
 import 'package:sat_sen_app/features/wheater/presentation/pages/weather_page.dart';
 
 class MainActivityPage extends StatefulWidget {
@@ -12,9 +15,10 @@ class _MainActivityPageState extends State<MainActivityPage> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = const [
-    Center(child: Text('Boletin Page')),
     WeatherPage(),
-    Center(child: Text('Settings Page')),
+    ForecastPage(),
+    BoletinPage(),
+    SettingsPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -29,19 +33,31 @@ class _MainActivityPageState extends State<MainActivityPage> {
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
+        iconSize: 18,
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.white,
+        elevation: 0,
+        selectedItemColor: Colors.orange,
+        unselectedItemColor: Colors.grey,
+        selectedFontSize: 13,
+        unselectedFontSize: 13,
         onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.article_outlined),
-            label: 'Boletin',
+            icon: Icon(Icons.warning_outlined),
+            label: 'Avisos',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.cloud_outlined),
-            label: 'Forecast',
+            label: 'Pronostico',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.article_outlined),
+            label: 'Boletín',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings_outlined),
-            label: 'Settings',
+            label: 'Configuración',
           ),
         ],
       ),

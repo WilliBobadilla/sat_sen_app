@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:sat_sen_app/core/constants.dart';
+import 'package:sat_sen_app/core/constants/constans.dart';
+import 'package:sat_sen_app/core/constants/myassets.dart';
+import 'package:sat_sen_app/core/constants/mysizes.dart';
+import 'package:sat_sen_app/core/utils/external_apps_opener_util.dart';
 
-class ForecastView extends StatefulWidget {
-  const ForecastView({super.key});
+class WeatherView extends StatefulWidget {
+  const WeatherView({super.key});
 
   @override
-  State<ForecastView> createState() => _ForecastViewState();
+  State<WeatherView> createState() => _WeatherViewState();
 }
 
-class _ForecastViewState extends State<ForecastView> {
+class _WeatherViewState extends State<WeatherView> {
   String? _selectedCity;
   final List<String> _cities = [
     'Asunción',
@@ -19,79 +22,133 @@ class _ForecastViewState extends State<ForecastView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20, 50, 30, 30),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Title
-            Text(
-              'Pronóstico',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 8),
-
-            // Dropdown
-            DropdownButtonFormField<String>(
-              decoration: const InputDecoration(
-                labelText: 'Selecciona una ciudad',
-                border: OutlineInputBorder(),
+    return SafeArea(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header bar
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            color: Colors.orange,
+            child: const Text(
+              'SAT_SEN',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
               ),
-              value: _selectedCity,
-              items: _cities.map((city) {
-                return DropdownMenuItem(value: city, child: Text(city));
-              }).toList(),
-              onChanged: (value) {
-                setState(() => _selectedCity = value);
-              },
             ),
-            const SizedBox(height: 12),
+          ),
 
-            // Forecast text
-            Text(
-              'El pronóstico aparecerá aquí.',
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-            const SizedBox(height: 20),
+          // Body
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Avisos',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: MySizes.genericSeparationItems),
+                  DropdownButtonFormField<String>(
+                    decoration: const InputDecoration(
+                      labelText: 'Selecciona una ciudad',
+                      // border: OutlineInputBorder(),
+                    ),
+                    value: _selectedCity,
+                    items: _cities.map((city) {
+                      return DropdownMenuItem(value: city, child: Text(city));
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() => _selectedCity = value);
+                    },
+                  ),
+                  const SizedBox(height: MySizes.genericSeparationItems),
 
-            // Recommendations section (background + overlay text)
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                Container(
-                  width: double.infinity,
-                  height: 180,
-                  decoration: BoxDecoration(
-                    color: Colors.blueGrey.shade100,
-                    borderRadius: BorderRadius.circular(16),
-                    image: const DecorationImage(
-                      image: AssetImage(MyAssets.backgroundImageOne),
-                      fit: BoxFit.cover,
+                  const Text(
+                    'No hay alertas disponibles.',
+                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
+                  const SizedBox(height: MySizes.genericSeparationItems),
+
+                  const Text(
+                    'Recomendaciones',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: MySizes.genericSeparationItems / 2),
+
+                  // Recommendation Card with image
+                  SizedBox(
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height / 3,
+                    child: Stack(
+                      children: [
+                        /*decoration: BoxDecoration(
+                          color: Colors.yellow.shade700,
+                          borderRadius: BorderRadius.circular(20),
+                        ),*/
+                        // padding: const EdgeInsets.all(16),
+                        Positioned(
+                          bottom: 0,
+                          left: 0,
+                          child: Image.asset(
+                            MyAssets.backgroundImageOne, // your asset path
+                            width: MediaQuery.of(context).size.width / 1.2,
+                            fit: BoxFit.fitWidth,
+                          ),
+                        ),
+                        Positioned(
+                          top: 40,
+                          left: 20,
+                          child: Text(
+                            'Disfrute de su día.',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-                Container(
-                  width: double.infinity,
-                  height: 180,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    color: Colors.black.withOpacity(0.3),
+
+                  const SizedBox(height: 32),
+                  const Text(
+                    'Para más información:',
+                    style: TextStyle(fontSize: 16),
                   ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Recomendaciones aparecerán aquí',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        ExternalAppsOpenerUtil.openWebBrowser(url: kwebUrl);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                      ),
+                      child: const Text(
+                        'VISITE NUESTRA WEB',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
+                      ),
                     ),
-                    textAlign: TextAlign.center,
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

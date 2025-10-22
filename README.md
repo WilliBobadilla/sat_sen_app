@@ -10,6 +10,10 @@ A new Flutter project.
 3. Firebase(for crashlytics)
 4. GraphQL
 
+# Setup 
+
+1. create a .env file
+
 ## Compile versions :iphone:
 
 See that the file depends on what enviroment you want your version, it can be: main_tst.dart, main_stg.dart, main_prd.dart, also there is other flag to pass if you want to compile for automated testing, that is an extra param in the command:
@@ -50,38 +54,38 @@ flutter build apk --debug -t lib/main_dev.dart --dart-define="TEST=true"
 
 ## Some useful commands :shell:
 
-- generate .g files to have fromJson and toJson methods in classes
+### generate .g files to have fromJson and toJson methods in classes
 
 ```
 dart run build_runner build --delete-conflicting-outputs
 ```
 
 
-- generate modules with mason 
-# 🎯 Activate from https://pub.dev
+### Generate modules with mason 
+####  Activate from https://pub.dev
 ```
 dart pub global activate mason_cli
 export PATH="$PATH":"$HOME/.pub-cache/bin"
 ```
 
-# 🚀 Initialize mason
+####  Initialize mason
 ```
 mason init
 ```
 
-# add your mason.yaml file 
+#### Add your mason.yaml file 
 ```
 bricks:
   clean_architecture_feature2: 0.1.0
   
 ```
 
-# get the brick
+#### Get the brick
 ```
 mason get
 ```
 
-# get the brick
+#### Use the brick
 ```
 mason make yourbrickname
 ```

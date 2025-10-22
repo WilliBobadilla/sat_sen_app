@@ -3,6 +3,10 @@ plugins {
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+
+    id("com.google.gms.google-services")
+    id("com.google.firebase.firebase-perf")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -11,6 +15,8 @@ android {
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
+        
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
@@ -36,6 +42,19 @@ android {
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
         }
+    }
+     dependencies {
+        implementation("androidx.core:core-ktx:1.10.1")
+        implementation("com.android.support:multidex:1.0.3")
+        
+        implementation ("com.google.android.instantapps:instantapps:1.1.0")
+        implementation ("com.google.code.gson:gson:2.8.6")
+        implementation("com.android.volley:volley:1.2.1")
+
+        implementation ("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.72")
+        implementation ("com.google.android.material:material:1.4.0")
+
+        coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
     }
 }
 

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "717246952953",
+    "project_id": "sat-sen-app",
+    "storage_bucket": "sat-sen-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:717246952953:android:6179ecf16ddd05bb53b928",
+        "android_client_info": {
+          "package_name": "com.sat_sen.sat_sen_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCO2j5dv8CadUQYeL0NWmJ2fr1TuJYquOE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
