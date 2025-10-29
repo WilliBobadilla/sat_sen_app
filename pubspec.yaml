@@ -67,14 +67,15 @@ dependencies:
   connectivity_plus: ^6.1.0
   easy_localization: ^3.0.5
   flutter_dotenv: ^6.0.0
+  html: ^0.15.6
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-
-  # rules and activating additional ones.
+  build_runner: ^2.4.6
   flutter_lints: ^5.0.0
+  json_serializable: ^6.7.1
+  mockito: ^5.4.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sat_sen_app/features/boletin/presentation/pages/boletin_page.dart';
 import 'package:sat_sen_app/features/forecast/presentation/pages/forecast_page.dart';
 import 'package:sat_sen_app/features/settings/presentation/pages/settings_page.dart';
-import 'package:sat_sen_app/features/wheater/presentation/pages/weather_page.dart';
+import 'package:sat_sen_app/features/wheater_warnings/presentation/pages/weather_page.dart';
 
 class MainActivityPage extends StatefulWidget {
   const MainActivityPage({super.key});
