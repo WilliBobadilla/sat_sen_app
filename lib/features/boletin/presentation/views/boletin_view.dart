@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sat_sen_app/core/ui/sat_set_appbar.dart';
 
 class BoletinView extends StatelessWidget {
   const BoletinView({super.key});
@@ -6,20 +7,7 @@ class BoletinView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFFF9800), // Orange bar
-        elevation: 0,
-        title: const Text(
-          'SAT_SEN',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 0.5,
-          ),
-        ),
-        centerTitle: false,
-      ),
+      appBar: const SatSenAppBar(),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
         child: Column(

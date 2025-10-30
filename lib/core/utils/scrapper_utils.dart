@@ -121,7 +121,7 @@ class WebScraperService {
 
       final doc = html_parser.parse(response.body);
       final cityDiv = doc.querySelector("div#$cityId");
-
+      print("City Div: ${cityDiv?.outerHtml}");
       if (cityDiv == null) {
         return [
           {"error": "No se encontró información para $cityName."},

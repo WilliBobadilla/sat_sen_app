@@ -12,7 +12,7 @@ class WeatherAlertInitial extends WeatherAlertState {}
 class WeatherAlertLoading extends WeatherAlertState {}
 
 class WeatherAlertLoaded extends WeatherAlertState {
-  final alert;
+  final AlertEntity alert;
 
   const WeatherAlertLoaded({required this.alert});
 

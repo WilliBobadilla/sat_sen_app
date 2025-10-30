@@ -1,138 +1,180 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:sat_sen_app/core/constants/constans.dart';
+import 'package:sat_sen_app/core/ui/sat_set_appbar.dart';
+import 'package:sat_sen_app/features/forecast/presentation/cubit/forecast_form_cubit.dart';
 
 class ForecastView extends StatelessWidget {
   const ForecastView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final forecastList = [
-      {
-        "day": "Lunes 20 Octubre 2025",
-        "description":
-            "Fresco a cálido, cielo escasamente nublado, vientos del sureste, luego rotando al noreste.",
-        "min": "13°C",
-        "max": "28°C",
-      },
-      {
-        "day": "Martes 21 Octubre 2025",
-        "description":
-            "Fresco a cálido, cielo parcialmente nublado, vientos variables, luego del noreste.",
-        "min": "16°C",
-        "max": "28°C",
-      },
-      {
-        "day": "Miércoles 22 Octubre 2025",
-        "description":
-            "Cálido a caluroso, cielo parcialmente nublado, vientos del noreste.",
-        "min": "19°C",
-        "max": "31°C",
-      },
-    ];
-
     return Scaffold(
+      appBar: const SatSenAppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+          //padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header bar
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(16),
-                color: Colors.orange,
-                child: const Text(
-                  'SAT_SEN',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-
               const SizedBox(height: 20),
               const Text(
                 'Pronóstico',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Asunción',
-                style: TextStyle(fontSize: 16, color: Colors.black87),
-              ),
-              const SizedBox(height: 16),
-
-              // Forecast list
-              ...forecastList.map(
-                (item) => Padding(
-                  padding: const EdgeInsets.only(bottom: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text.rich(
-                        TextSpan(
-                          children: [
-                            const TextSpan(
-                              text: 'Día: ',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            TextSpan(text: item["day"]),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text.rich(
-                        TextSpan(
-                          children: [
-                            const TextSpan(
-                              text: 'Descripción: ',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            TextSpan(text: item["description"]),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Mínima ${item["min"]}',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      Text(
-                        'Máxima ${item["max"]}',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+              BlocBuilder<ForecastFormCubit, ForecastFormState>(
+                builder: (context, state) {
+                  return DropdownButtonFormField<String>(
+                    decoration: const InputDecoration(
+                      labelText: 'Selecciona una ciudad',
+                      // border: OutlineInputBorder(),
+                    ),
+                    value: state.cityName ?? kDefaultCity,
+                    items: kMainCities.map((city) {
+                      return DropdownMenuItem(value: city, child: Text(city));
+                    }).toList(),
+                    onChanged: (value) {
+                      context.read<ForecastFormCubit>().changeCityName(value!);
+                    },
+                  );
+                },
               ),
 
               const SizedBox(height: 16),
+              BlocBuilder<ForecastFormCubit, ForecastFormState>(
+                builder: (context, state) {
+                  if (state.forecastData != null) {
+                    final forecastData = state.forecastData!.forecastData;
+                    return Column(
+                      children: forecastData.map<Widget>((item) {
+                        return _ForecastCard(
+                          day: item["day"] ?? "",
+                          description: item["description"] ?? "",
+                          min: item["min"] ?? "",
+                          max: item["max"] ?? "",
+                        );
+                      }).toList(),
+                    );
+                  }
+                  return Container();
+                },
+              ),
+
+              // Forecast lis
+              const SizedBox(height: 16),
+              BlocBuilder<ForecastFormCubit, ForecastFormState>(
+                builder: (context, state) {
+                  if (state.recommendation != null) {
+                    return _RecommendationCard(
+                      day: '',
+                      description:
+                          state.recommendation ?? kSinRecomendacioensMessage,
+                    );
+                  }
+                  return _RecommendationCard(
+                    day: '',
+                    description:
+                        state.recommendation ?? kSinRecomendacioensMessage,
+                  );
+                },
+              ),
 
               // Yellow card for alerts
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.yellow.shade700,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                padding: const EdgeInsets.all(24),
-                child: const Text(
-                  'Sin alertas por temperaturas extremas para Asunción en los próximos días.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, color: Colors.black87),
-                ),
-              ),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class _ForecastCard extends StatelessWidget {
+  final String day;
+  final String description;
+  final String min;
+  final String max;
+
+  const _ForecastCard({
+    super.key,
+    required this.day,
+    required this.description,
+    required this.min,
+    required this.max,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text.rich(
+            TextSpan(
+              children: [
+                const TextSpan(
+                  text: 'Día: ',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                TextSpan(text: day), //item["day"]),
+              ],
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text.rich(
+            TextSpan(
+              children: [
+                const TextSpan(
+                  text: 'Descripción: ',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                TextSpan(text: description), //item["description"]),
+              ],
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            min.trim().replaceAll('\n', ''), //item["min"] ,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.grey,
+            ),
+          ),
+          Text(
+            max.trim().replaceAll('\n', ''), //item["max"] ,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.grey,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _RecommendationCard extends StatelessWidget {
+  final String day;
+  final String description;
+
+  const _RecommendationCard({
+    super.key,
+    required this.day,
+    required this.description,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.yellow.shade700,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      padding: const EdgeInsets.all(24),
+      child: Html(data: description),
     );
   }
 }

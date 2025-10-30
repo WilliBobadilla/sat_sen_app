@@ -38,6 +38,13 @@ class WeatherPage extends StatelessWidget {
               }
             },
           ),
+          BlocListener<WheaterAlertFormCubit, WheaterAlertFormState>(
+            listener: (context, state) {
+              if (state.departmentName != null) {
+                BlocProvider.of<WeatherAlertCubit>(context).onGetWeatherAlert();
+              }
+            },
+          ),
         ],
         child: WeatherView(),
       ),

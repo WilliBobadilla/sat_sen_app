@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sat_sen_app/core/constants/constans.dart';
+import 'package:sat_sen_app/core/ui/sat_set_appbar.dart';
 
 class SettingsView extends StatefulWidget {
   const SettingsView({super.key});
@@ -11,42 +13,13 @@ class _SettingsViewState extends State<SettingsView> {
   final TextEditingController _phoneController = TextEditingController();
   String? _selectedDepartment;
 
-  final List<String> _departments = [
-    'Asunción',
-    'Central',
-    'Alto Paraná',
-    'Itapúa',
-    'Cordillera',
-    'Guairá',
-    'Caaguazú',
-    'Caazapá',
-    'Concepción',
-    'San Pedro',
-    'Paraguarí',
-    'Amambay',
-    'Canindeyú',
-    'Presidente Hayes',
-    'Boquerón',
-    'Alto Paraguay',
-  ];
+  final List<String> _departments = kDepartmentsList;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFFF9800),
-        elevation: 0,
-        title: const Text(
-          'SAT_SEN',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 0.5,
-          ),
-        ),
-        centerTitle: false,
-      ),
+      appBar: const SatSenAppBar(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
         child: Column(
