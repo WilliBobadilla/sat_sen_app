@@ -1,10 +1,9 @@
 //import 'package:timezone/timezone.dart' as tz;
-import 'dart:developer' as developer;
-import 'package:timezone/timezone.dart' as tz;
-import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter_timezone/flutter_timezone.dart';
-import 'package:sat_sen_app/core/utils/string_utils.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:sat_sen_app/core/utils/string_utils.dart';
+import 'package:timezone/timezone.dart' as tz1;
+import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class LocalNotifications {
@@ -43,7 +42,7 @@ class LocalNotifications {
       initializationSettings,
       onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
     );
-    developer.log("FLUTTER NOTIFICATIONS INITIALIZED");
+    print("FLUTTER NOTIFICATIONS INITIALIZED");
   }
 
   static void iosShowNotification(
@@ -109,21 +108,23 @@ class LocalNotifications {
     // id, title, description, date, notificationDetails
     tz.initializeTimeZones();
     final String timeZoneName = await FlutterTimezone.getLocalTimezone();
-    tz.setLocalLocation(tz.getLocation(timeZoneName));
+    tz1.setLocalLocation(tz1.getLocation(timeZoneName));
     if (await Permission.notification.isDenied) {
       print("permission denied, requesting it");
       await Permission.notification.request();
     }
-    final now = tz.TZDateTime.now(tz.local);
-    final dateToNotify = tz.TZDateTime(
-      tz.local,
+    final now = tz1.TZDateTime.now(tz1.local);
+    final dateToNotify = tz1.TZDateTime(
+      tz1.local,
       now.year,
       now.month,
       now.day,
       now.hour,
       now.minute + 2, // Example: schedule for 1 minute later
     );
-    final inTwoSeconds = tz.TZDateTime.now(tz.local).add(Duration(seconds: 1));
+    final inTwoSeconds = tz1.TZDateTime.now(
+      tz1.local,
+    ).add(Duration(seconds: 1));
     final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     var androidNotification = AndroidNotificationDetails(
       'channelId1',

@@ -1,16 +1,32 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:sat_sen_app/main_view.dart';
+import 'package:workmanager/workmanager.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:sat_sen_app/firebase_options.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:sat_sen_app/core/workers/call_dispatcher.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:sat_sen_app/core/utils/local_notification_utils.dart';
 import 'core/injection/injection_container.dart' as dependency_injection;
+import 'package:sat_sen_app/core/common_blocs/notification_bloc/notification_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
   dependency_injection.init();
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  await NotificationBloc.initializeFCM();
+  await LocalNotifications.initializeLocalNotifications();
+
+  await Workmanager().initialize(callbackDispatcher);
+  await Workmanager().registerPeriodicTask(
+    'check_alerts_task',
+    'check_alerts_task',
+    frequency: const Duration(hours: 5), // run every hour
+    initialDelay: const Duration(minutes: 1),
+  );
+
   FlutterError.onError = (errorDetails) {
     FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
   };
@@ -19,6 +35,7 @@ void main() async {
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
     return true;
   };
+
   runApp(const MyApp());
 }
 
@@ -50,6 +67,26 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return MainActivityPage();
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => NotificationBloc(
+            firebaseMessaging: dependency_injection.sl<FirebaseMessaging>(),
+            requestLocalNotificationPermissions:
+                LocalNotifications.requestPermissionLocalNotifications,
+          )..add(NotificationRequestedPermission()),
+        ),
+      ],
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<NotificationBloc, NotificationState>(
+            listener: (context, state) {
+              if (state.tokenFCM != null) {}
+            },
+          ),
+        ],
+        child: MainActivityPage(),
+      ),
+    );
   }
 }

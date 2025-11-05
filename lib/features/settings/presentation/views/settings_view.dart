@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sat_sen_app/core/constants/constans.dart';
+import 'package:http/http.dart' as http;
 import 'package:sat_sen_app/core/ui/sat_set_appbar.dart';
+import 'package:sat_sen_app/core/constants/constans.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsView extends StatefulWidget {
   const SettingsView({super.key});
@@ -10,10 +12,99 @@ class SettingsView extends StatefulWidget {
 }
 
 class _SettingsViewState extends State<SettingsView> {
-  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController(
+    text: '09',
+  );
   String? _selectedDepartment;
+  bool _isLoading = false;
 
   final List<String> _departments = kDepartmentsList;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSavedData();
+
+    // Keep the “09” prefix fixed like Android TextWatcher
+    _phoneController.addListener(() {
+      if (!_phoneController.text.startsWith('09')) {
+        _phoneController.text = '09';
+        _phoneController.selection = TextSelection.fromPosition(
+          TextPosition(offset: _phoneController.text.length),
+        );
+      }
+    });
+  }
+
+  Future<void> _loadSavedData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _selectedDepartment = prefs.getString('department_sms');
+      _phoneController.text = prefs.getString('phone') ?? '09';
+    });
+  }
+
+  Future<void> _registerUser() async {
+    final phone = _phoneController.text.trim();
+    final depSms = _selectedDepartment;
+
+    if (!phone.startsWith('09') || phone.length != 10) {
+      _showSnackBar('Ingrese un número de teléfono válido');
+      return;
+    }
+
+    if (depSms == null || depSms.isEmpty) {
+      _showSnackBar('Por favor, seleccione un departamento');
+      return;
+    }
+
+    setState(() => _isLoading = true);
+    //TODO: this should be done in the datasource layer!!!!!
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('phone', phone);
+      prefs.setString('department_sms', depSms);
+
+      final uri = Uri.parse(
+        'https://satsen.com.py/registrousuarioapp.php',
+      ); // TODO: move to constants
+      final response = await http.post(
+        uri,
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: {'telefono': phone, 'departamento': depSms},
+      );
+
+      if (response.statusCode == 200) {
+        final body = response.body.trim();
+        if (body == 'OK') {
+          _showSnackBar('Datos guardados en servidor');
+        } else if (body.contains('Usuario ya registrado')) {
+          _showSnackBar('Ya estás registrado en ese departamento');
+        } else if (body.contains('Datos incompletos')) {
+          _showSnackBar('Faltan datos para el registro');
+        } else {
+          _showSnackBar('Error al guardar en servidor');
+        }
+      } else {
+        _showSnackBar('Error de conexión al servidor');
+      }
+    } catch (e) {
+      debugPrint('Error: $e');
+      _showSnackBar('Error de conexión al servidor');
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: const Color(0xFFFF9800),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,11 +130,15 @@ class _SettingsViewState extends State<SettingsView> {
               style: TextStyle(fontSize: 15, color: Colors.black54),
             ),
             const SizedBox(height: 24),
+
+            // Phone input
             TextField(
               controller: _phoneController,
               keyboardType: TextInputType.phone,
+              maxLength: 10,
               decoration: const InputDecoration(
-                hintText: '09',
+                hintText: '09XXXXXXXX',
+                counterText: '',
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.black54),
                 ),
@@ -53,6 +148,8 @@ class _SettingsViewState extends State<SettingsView> {
               ),
             ),
             const SizedBox(height: 24),
+
+            // Department selector
             const Text(
               'Seleccione su Departamento',
               style: TextStyle(fontSize: 15, color: Colors.black54),
@@ -71,17 +168,18 @@ class _SettingsViewState extends State<SettingsView> {
                 );
               }).toList(),
               onChanged: (String? value) {
-                setState(() {
-                  _selectedDepartment = value;
-                });
+                setState(() => _selectedDepartment = value);
               },
             ),
+
             const SizedBox(height: 32),
+
+            // Register button
             SizedBox(
               width: double.infinity,
               height: 48,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: _isLoading ? null : _registerUser,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFFF9800),
                   shape: RoundedRectangleBorder(
@@ -89,21 +187,37 @@ class _SettingsViewState extends State<SettingsView> {
                   ),
                   elevation: 2,
                 ),
-                child: const Text(
-                  'REGISTRAR',
-                  style: TextStyle(
-                    color: Colors.white,
-                    letterSpacing: 1.2,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
+                child: _isLoading
+                    ? const SizedBox(
+                        height: 22,
+                        width: 22,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
+                      )
+                    : const Text(
+                        'REGISTRAR',
+                        style: TextStyle(
+                          color: Colors.white,
+                          letterSpacing: 1.2,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
               ),
             ),
             const SizedBox(height: 20),
+
+            // Change department button
             Center(
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    '/settings',
+                  ); // adjust route if needed
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFFF9800),
                   elevation: 2,
