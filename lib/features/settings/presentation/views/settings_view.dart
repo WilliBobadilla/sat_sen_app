@@ -110,7 +110,7 @@ class _SettingsViewState extends State<SettingsView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const SatSenAppBar(),
+      appBar: const SatSenAppBar(title: "Configuraciones"),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
         child: Column(
@@ -213,10 +213,11 @@ class _SettingsViewState extends State<SettingsView> {
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(
+                  /* Navigator.pushNamed(
                     context,
                     '/settings',
-                  ); // adjust route if needed
+                  ); 
+                  */
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFFF9800),

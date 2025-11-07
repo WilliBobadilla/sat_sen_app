@@ -49,7 +49,7 @@ class _MainActivityPageState extends State<MainActivityPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.cloud_outlined),
-            label: 'Pronostico',
+            label: 'Pronóstico',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.article_outlined),

@@ -11,7 +11,7 @@ class ForecastView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const SatSenAppBar(),
+      appBar: const SatSenAppBar(title: "Pronóstico"),
       body: SafeArea(
         child: SingleChildScrollView(
           //padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),

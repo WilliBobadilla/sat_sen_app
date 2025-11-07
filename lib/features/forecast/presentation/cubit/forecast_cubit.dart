@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:sat_sen_app/core/errors/failures.dart';
 import 'package:sat_sen_app/core/extensions/cubit_ext.dart';
-import 'package:sat_sen_app/core/utils/scrapper_utils.dart';
+import 'package:sat_sen_app/core/scrappers/scrapper_utils.dart';
 import 'package:sat_sen_app/features/forecast/domain/entities/forecast_entity.dart';
 
 part 'forecast_state.dart';

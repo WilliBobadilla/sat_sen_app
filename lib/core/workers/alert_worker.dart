@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:developer' as developer;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:sat_sen_app/core/utils/scrapper_utils.dart';
+import 'package:sat_sen_app/core/scrappers/scrapper_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 

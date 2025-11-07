@@ -22,7 +22,7 @@ class _WeatherViewState extends State<WeatherView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const SatSenAppBar(),
+      appBar: const SatSenAppBar(title: "Avisos"),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

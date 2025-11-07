@@ -1,6 +1,6 @@
 # sat_sen_app
 
-A new Flutter project.
+Sat sen app, this is a migration of the original version in android/kotlin.
 
 
 ## Technologies :computer:
@@ -12,17 +12,9 @@ A new Flutter project.
 
 # Setup 
 
-1. create a .env file
+1. create a empty .env file
 
 ## Compile versions :iphone:
-
-See that the file depends on what enviroment you want your version, it can be: main_tst.dart, main_stg.dart, main_prd.dart, also there is other flag to pass if you want to compile for automated testing, that is an extra param in the command:
-
-for automated testing(add this to the build command):
-
-```shell
---dart-define= "TEST=true"
-```
 
 for ios:
 
@@ -33,24 +25,16 @@ flutter build ios --release -t lib/main_tst.dart
 for android:
 
 ```shell
-flutter build apk --release -t lib/main_tst.dart
+flutter build apk --release -t lib/main.dart
 ```
 
 android(store):
 
 ```shell
-flutter build appbundle --release -t lib/main_prd.dart
+flutter build appbundle --release -t lib/main.dart
 ```
 
-```
-. For production builds, run flutter build apk --obfuscate --split-debug-info=build/debug-info (or ios/macos) then flutter pub run sentry_dart_plugin to upload debug symbols
-```
 
-So for example if you want to make a version for automated testing, you can run this command:
-
-```shell
-flutter build apk --debug -t lib/main_dev.dart --dart-define="TEST=true"
-```
 
 ## Some useful commands :shell:
 
@@ -89,3 +73,12 @@ mason get
 ```
 mason make yourbrickname
 ```
+
+### Developer quick note 
+
+There are still a lot of things  to improve and to re-order, for example,
+1. there are some scrappers part that is needed to put in the datasource layer and put as clean architecture indicate.
+2. Use a state manager like bloc or riverpod, to contorl pages/views state.
+3. Use your own theme data.
+
+If you want to scale it and to grow, I recommend you to do all of this recomendations in this paragraph.  

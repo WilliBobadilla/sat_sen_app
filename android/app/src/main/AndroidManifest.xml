@@ -18,7 +18,7 @@
 
       
     <application
-        android:label="sat_sen_app"
+        android:label="SAT_SEN"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

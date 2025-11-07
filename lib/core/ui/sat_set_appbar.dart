@@ -6,16 +6,17 @@ class SatSenAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   //final bool showLogo;
 
-  const SatSenAppBar({super.key, this.title = 'SAT_SEN'});
+  const SatSenAppBar({super.key, this.title = 'Sat Sen'});
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: const Color(0xFFFF9800), // orange tone
       elevation: 0,
-      centerTitle: false,
+      centerTitle: true,
       titleSpacing: 16,
       title: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             title,

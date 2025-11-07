@@ -1,4 +1,4 @@
-import 'package:sat_sen_app/core/utils/scrapper_utils.dart';
+import 'package:sat_sen_app/core/scrappers/scrapper_utils.dart';
 import 'package:sat_sen_app/features/wheater_warnings/data/models/alert_model.dart';
 
 abstract class WheaterRemoteSource {
