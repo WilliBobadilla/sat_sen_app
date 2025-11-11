@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:sat_sen_app/core/constants/mysizes.dart';
 import 'package:sat_sen_app/core/ui/sat_set_appbar.dart';
 import 'package:sat_sen_app/core/constants/constans.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -127,7 +128,10 @@ class _SettingsViewState extends State<SettingsView> {
       backgroundColor: Colors.white,
       appBar: const SatSenAppBar(title: "Configuraciones"),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+        padding: const EdgeInsets.symmetric(
+          horizontal: MySizes.leftRightPadding,
+          vertical: 20,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

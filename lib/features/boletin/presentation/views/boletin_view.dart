@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sat_sen_app/core/constants/mysizes.dart';
 import 'package:sat_sen_app/core/scrappers/boletin_scrapper.dart';
 import 'package:sat_sen_app/core/ui/sat_set_appbar.dart';
 
@@ -42,7 +43,10 @@ class _BoletinViewState extends State<BoletinView> {
 
           final data = snapshot.data!;
           return SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+            padding: const EdgeInsets.symmetric(
+              horizontal: MySizes.leftRightPadding,
+              vertical: 20,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

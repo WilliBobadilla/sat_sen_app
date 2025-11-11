@@ -10,6 +10,8 @@ Sat sen app, this is a migration of the original version in android/kotlin.
 3. Firebase(for crashlytics)
 4. GraphQL
 
+
+
 # Setup 
 
 1. create a empty .env file
@@ -33,8 +35,6 @@ android(store):
 ```shell
 flutter build appbundle --release -t lib/main.dart
 ```
-
-
 
 ## Some useful commands :shell:
 
@@ -73,6 +73,9 @@ mason get
 ```
 mason make yourbrickname
 ```
+
+### Usefull links
+https://pub.dev/packages/workmanager
 
 ### Developer quick note 
 

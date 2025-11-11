@@ -23,90 +23,104 @@ class _WeatherViewState extends State<WeatherView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const SatSenAppBar(title: "Avisos"),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Body
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Avisos',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: MySizes.genericSeparationItems),
-                  BlocBuilder<WheaterAlertFormCubit, WheaterAlertFormState>(
-                    builder: (context, state) {
-                      return DropdownButtonFormField<String>(
-                        decoration: const InputDecoration(
-                          labelText: 'Selecciona una ciudad',
-                          // border: OutlineInputBorder(),
-                        ),
-                        value: state.departmentName ?? _departments[0],
-                        items: _departments.map((city) {
-                          return DropdownMenuItem(
-                            value: city,
-                            child: Text(city),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          context
-                              .read<WheaterAlertFormCubit>()
-                              .setDepartmentName(value!);
-                        },
-                      );
-                    },
-                  ),
-                  const SizedBox(height: MySizes.genericSeparationItems),
-                  BlocBuilder<WeatherAlertCubit, WeatherAlertState>(
-                    builder: (context, state) {
-                      if (state is WeatherAlertLoaded) {
-                        return _BodyWidget(alert: state.alert);
-                      }
-                      return const Text(
-                        'No hay alertas disponibles.',
-                        style: TextStyle(fontSize: 14, color: Colors.grey),
-                      );
-                    },
-                  ),
-
-                  const SizedBox(height: 32),
-                  const Text(
-                    'Para más información:',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        ExternalAppsOpenerUtil.openWebBrowser(url: kwebUrl);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orange,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6),
-                        ),
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(
+          MySizes.padding,
+          0,
+          MySizes.leftRightPadding,
+          0,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Body
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 20,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Avisos',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
-                      child: const Text(
-                        'VISITE NUESTRA WEB',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
+                    ),
+                    const SizedBox(height: MySizes.genericSeparationItems),
+                    BlocBuilder<WheaterAlertFormCubit, WheaterAlertFormState>(
+                      builder: (context, state) {
+                        return DropdownButtonFormField<String>(
+                          decoration: const InputDecoration(
+                            labelText: 'Selecciona una ciudad',
+                            // border: OutlineInputBorder(),
+                          ),
+                          value: state.departmentName ?? _departments[0],
+                          items: _departments.map((city) {
+                            return DropdownMenuItem(
+                              value: city,
+                              child: Text(city),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            context
+                                .read<WheaterAlertFormCubit>()
+                                .setDepartmentName(value!);
+                          },
+                        );
+                      },
+                    ),
+                    const SizedBox(height: MySizes.genericSeparationItems),
+                    BlocBuilder<WeatherAlertCubit, WeatherAlertState>(
+                      builder: (context, state) {
+                        if (state is WeatherAlertLoaded) {
+                          return _BodyWidget(alert: state.alert);
+                        }
+                        return const Text(
+                          'No hay alertas disponibles.',
+                          style: TextStyle(fontSize: 14, color: Colors.grey),
+                        );
+                      },
+                    ),
+
+                    const SizedBox(height: 32),
+                    const Text(
+                      'Para más información:',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          ExternalAppsOpenerUtil.openWebBrowser(url: kwebUrl);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orange,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                        ),
+                        child: const Text(
+                          'VISITE NUESTRA WEB',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

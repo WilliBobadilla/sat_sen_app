@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:sat_sen_app/core/constants/constans.dart';
+import 'package:sat_sen_app/core/constants/mysizes.dart';
 import 'package:sat_sen_app/core/ui/sat_set_appbar.dart';
 import 'package:sat_sen_app/features/forecast/presentation/cubit/forecast_form_cubit.dart';
 
@@ -14,7 +15,10 @@ class ForecastView extends StatelessWidget {
       appBar: const SatSenAppBar(title: "Pronóstico"),
       body: SafeArea(
         child: SingleChildScrollView(
-          //padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+          padding: const EdgeInsets.symmetric(
+            horizontal: MySizes.leftRightPadding,
+            vertical: 20,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
