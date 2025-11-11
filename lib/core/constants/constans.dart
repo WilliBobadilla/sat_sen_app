@@ -132,3 +132,8 @@ const KCitiesList = [
   {"itapúa": "Encarnación"},
   {"cordillera": "Caacupé"},
 ];
+
+// for dhared preferences
+
+const kDefaultCityPref = "defaultCity";
+const kDefaultDepartmentPref = "defaultDepartment";

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer' as developer;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:sat_sen_app/core/constants/constans.dart';
 import 'package:sat_sen_app/core/scrappers/scrapper_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -65,8 +66,11 @@ class AlertWorker {
   static Future<void> checkAlerts() async {
     print("AlertWorker: Checking alerts...");
     final prefs = await SharedPreferences.getInstance();
-    final userDepartment = prefs.getString('dep_app')?.trim().toLowerCase();
-
+    final userDepartment = prefs
+        .getString(kDefaultDepartmentPref)
+        ?.trim()
+        .toLowerCase();
+    developer.log("LOG: user department is $userDepartment");
     if (userDepartment == null || userDepartment.isEmpty) {
       print('AlertWorker: No se encontró un departamento configurado.');
       return;
@@ -121,12 +125,14 @@ class AlertWorker {
           type: notificationType,
         );
 
-        print('AlertWorker: Notificación enviada: ${alert.descripcion}');
+        developer.log(
+          'AlertWorker: Notificación enviada: ${alert.descripcion}',
+        );
       } else {
-        print('AlertWorker: No hay alertas para $userDepartment');
+        developer.log('AlertWorker: No hay alertas para $userDepartment');
       }
     } catch (e) {
-      print('AlertWorker: Error al procesar alertas -> $e');
+      developer.log('AlertWorker: Error al procesar alertas -> $e');
     }
   }
 }

@@ -17,6 +17,7 @@ class _SettingsViewState extends State<SettingsView> {
   );
   String? _selectedDepartment;
   bool _isLoading = false;
+  bool _isLoadingDepartment = false;
 
   final List<String> _departments = kDepartmentsList;
 
@@ -39,7 +40,7 @@ class _SettingsViewState extends State<SettingsView> {
   Future<void> _loadSavedData() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      _selectedDepartment = prefs.getString('department_sms');
+      _selectedDepartment = prefs.getString(kDefaultDepartmentPref);
       _phoneController.text = prefs.getString('phone') ?? '09';
     });
   }
@@ -63,7 +64,7 @@ class _SettingsViewState extends State<SettingsView> {
     try {
       final prefs = await SharedPreferences.getInstance();
       prefs.setString('phone', phone);
-      prefs.setString('department_sms', depSms);
+      prefs.setString(kDefaultDepartmentPref, depSms);
 
       final uri = Uri.parse(
         'https://satsen.com.py/registrousuarioapp.php',
@@ -94,6 +95,20 @@ class _SettingsViewState extends State<SettingsView> {
     } finally {
       setState(() => _isLoading = false);
     }
+  }
+
+  void registerOnlyDepartment() async {
+    setState(() => _isLoadingDepartment = true);
+    final depSms = _selectedDepartment;
+    final prefs = await SharedPreferences.getInstance();
+    if (depSms == null || depSms.isEmpty) {
+      _showSnackBar('Por favor, seleccione un departamento');
+      return;
+    }
+
+    prefs.setString(kDefaultDepartmentPref, depSms);
+    setState(() => _isLoadingDepartment = false);
+    _showSnackBar('Dato de departamento actualizado');
   }
 
   void _showSnackBar(String message) {
@@ -208,7 +223,40 @@ class _SettingsViewState extends State<SettingsView> {
               ),
             ),
             const SizedBox(height: 20),
+            SizedBox(
+              width: double.infinity,
+              height: 48,
+              child: ElevatedButton(
+                onPressed: _isLoadingDepartment ? null : registerOnlyDepartment,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFFF9800),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  elevation: 2,
+                ),
+                child: _isLoadingDepartment
+                    ? const SizedBox(
+                        height: 22,
+                        width: 22,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
+                      )
+                    : const Text(
+                        'REGISTRAR SOLO DEPARTAMENTO',
+                        style: TextStyle(
+                          color: Colors.white,
+                          letterSpacing: 1.2,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+              ),
+            ),
 
+            const SizedBox(height: 20),
             // Change department button
             Center(
               child: ElevatedButton(

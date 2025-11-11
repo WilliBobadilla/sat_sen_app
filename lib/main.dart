@@ -14,18 +14,22 @@ import 'package:sat_sen_app/core/common_blocs/notification_bloc/notification_blo
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+
+  await Workmanager().registerPeriodicTask(
+    'check_alerts_task',
+    'check_alerts_task',
+    frequency: const Duration(minutes: 15), // minimun is 15 min
+    initialDelay: const Duration(minutes: 1),
+  );
+
   dependency_injection.init();
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   await NotificationBloc.initializeFCM();
   await LocalNotifications.initializeLocalNotifications();
 
-  await Workmanager().initialize(callbackDispatcher);
-  await Workmanager().registerPeriodicTask(
-    'check_alerts_task',
-    'check_alerts_task',
-    frequency: const Duration(hours: 5), // run every hour
-    initialDelay: const Duration(minutes: 1),
-  );
+  // await Workmanager().
 
   FlutterError.onError = (errorDetails) {
     FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
